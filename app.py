@@ -8,6 +8,7 @@ def create_app(test_config=None):
   # create and configure the app
   app = Flask(__name__)
   CORS(app)
+  setup_db(app)
 
   return app
 
