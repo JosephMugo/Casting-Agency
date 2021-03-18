@@ -13,13 +13,13 @@ def setup_db(app):
 
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String, nullable=False)
+    title = db.Column(db.String, nullable=False, unique=True)
     release_date = db.Column(db.Date, nullable=False)
     actors = db.relationship('Actor', backref='movie', lazy=True)
 
 class Actor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, nullable=False, unique=True)
     age = db.Column(db.Integer, nullable=False)
     gender = db.Column(db.String, nullable=False)
     movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'), nullable=False)
