@@ -38,6 +38,19 @@ def get_movies():
         })
   return jsonify(formattedMovies)
 
+@APP.route('/actors', methods=['GET'])
+def get_actors():
+  actors = Actor.query.all()
+  formattedActors = []
+  for actor in actors:
+    formattedActors.append({
+      "id": actor.id,
+      "name": actor.name,
+      "age": actor.age,
+      "gender": actor.gender
+    })
+  return jsonify(formattedActors)
+
 '''
 Error Handler 
 '''
