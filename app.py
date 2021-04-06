@@ -1,8 +1,10 @@
-import os
+import os, sys
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from models import setup_db, Movie, Actor
+from models import setup_db, Movie, Actor, db
+from sqlalchemy.exc import IntegrityError
+import datetime
 
 def create_app(test_config=None):
   # create and configure the app
@@ -38,6 +40,25 @@ def get_movies():
         })
   return jsonify(formattedMovies)
 
+@APP.route('/movies', methods=['POST'])
+def post_movie():
+  try:
+    request_data = request.get_json()
+    # check if there is request data and it contains the right data
+    if ((request_data['title']) and (request_data['date'])):
+      title = request_data['title']
+      date = datetime.datetime.strptime(request_data['date'], "%m/%d/%Y")
+      newMovie = Movie(title=title, release_date=date)
+      db.session.add(newMovie)
+      db.session.commit()
+      print(newMovie)
+    else:
+      db.session.rollback()
+      abort(400)
+    return 'done'
+  except:
+    abort(400)
+
 @APP.route('/actors', methods=['GET'])
 def get_actors():
   actors = Actor.query.all()
@@ -55,9 +76,9 @@ def get_actors():
 Error Handler 
 '''
 
-@APP.errorhandler(404)
-def page_not_found(e):
-  return jsonify(status_code=400, error="Not Found"), 400
+@APP.errorhandler(400)
+def bad_request(e):
+  return jsonify(status_code=400, error="Bad Request"), 400
 
 @APP.errorhandler(403)
 def page_not_found(e):
@@ -70,7 +91,6 @@ def page_not_found(e):
 @APP.errorhandler(500)
 def page_not_found(e):
   return jsonify(status_code=500, error="Internal Server Error"), 500
-
 
 if __name__ == '__main__':
     APP.run(host='0.0.0.0', port=8080, debug=True)
