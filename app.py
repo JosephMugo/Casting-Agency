@@ -72,6 +72,26 @@ def get_actors():
     })
   return jsonify(formattedActors)
 
+@APP.route('/actors', methods=['POST'])
+def post_actor():
+  try:
+    request_data = request.get_json()
+    # check if there is request data and it contains the right data
+    if ((request_data['name']) and (request_data['age']) and (request_data['gender']) and (request_data['movie_id'])):
+      name = request_data['name']
+      age = request_data['age']
+      gender = request_data['gender']
+      movie_id = request_data['movie_id']
+      newActor = Actor(name=name, age=age, gender=gender, movie_id=movie_id)
+      db.session.add(newActor)
+      db.session.commit()
+    else:
+      abort(400)
+    return 'done'
+  except:
+    db.session.rollback()
+    abort(400)
+
 '''
 Error Handler 
 '''
