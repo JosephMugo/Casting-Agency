@@ -92,6 +92,7 @@ def post_actor():
     db.session.rollback()
     abort(400)
 
+
 '''
 Error Handler 
 '''
@@ -103,6 +104,10 @@ def bad_request(e):
 @APP.errorhandler(403)
 def page_not_found(e):
   return jsonify(status_code=403, error="Forbidden"), 403
+
+@APP.errorhandler(404)
+def not_found(e):
+  return jsonify(status_code=404, error="Not Found"), 404
 
 @APP.errorhandler(410)
 def page_not_found(e):
