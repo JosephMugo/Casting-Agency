@@ -96,15 +96,15 @@ def post_actor():
 def patch_actor(actor_id):
   print(actor_id)
   # check if actor object exist in database
-  movie = Actor.query.filter_by(id=actor_id).first()
-  if movie == None:
+  actor = Actor.query.filter_by(id=actor_id).first()
+  if actor == None:
     abort(404)
   else:
     request_data = request.get_json()
     # update name - if new name provided
     if ('name' in request_data):
       try:
-        movie.name = request_data['name']
+        actor.name = request_data['name']
         db.session.commit()
       except:
         db.session.rollback()
@@ -112,7 +112,7 @@ def patch_actor(actor_id):
     # update age - if new age provided
     if ('age' in request_data):
       try:
-        movie.age = request_data['age']
+        actor.age = request_data['age']
         db.session.commit()
       except:
         db.session.rollback()
