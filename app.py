@@ -46,7 +46,7 @@ def get_movies():
           })
   except:
     abort(500, description="Internal Server Error")
-  return jsonify(formattedMovies)
+  return jsonify({"movies": formattedMovies})
 
 @APP.route('/movies', methods=['POST'])
 def post_movie():
