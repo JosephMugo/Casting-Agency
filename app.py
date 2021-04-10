@@ -26,23 +26,26 @@ Endpoints
 '''
 @APP.route('/movies', methods=['GET'])
 def get_movies():
-  movies = Movie.query.all()
-  formattedMovies = []
-  for movie in movies:
-        formattedActors = []
-        for actor in movie.actors:
-              formattedActors.append({
-                "id": actor.id,
-                "name": actor.name,
-                "age": actor.age,
-                "gender": actor.gender,
-              })
-        formattedMovies.append({
-          "id": movie.id, 
-          "title": movie.title, 
-          "release_date": movie.release_date.strftime('%m/%d/%Y'),
-          "actors": formattedActors
-        })
+  try:
+    movies = Movie.query.all()
+    formattedMovies = []
+    for movie in movies:
+          formattedActors = []
+          for actor in movie.actors:
+                formattedActors.append({
+                  "id": actor.id,
+                  "name": actor.name,
+                  "age": actor.age,
+                  "gender": actor.gender,
+                })
+          formattedMovies.append({
+            "id": movie.id, 
+            "title": movie.title, 
+            "release_date": movie.release_date.strftime('%m/%d/%Y'),
+            "actors": formattedActors
+          })
+  except:
+    abort(500)
   return jsonify(formattedMovies)
 
 @APP.route('/movies', methods=['POST'])
