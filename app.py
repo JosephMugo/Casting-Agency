@@ -45,27 +45,31 @@ def get_movies():
             "actors": formattedActors
           })
   except:
-    abort(500)
+    abort(500, description="Internal Server Error")
   return jsonify(formattedMovies)
 
 @APP.route('/movies', methods=['POST'])
 def post_movie():
-  try:
-    request_data = request.get_json()
-    # check if there is request data and it contains the right data
-    if ((request_data['title']) and (request_data['date'])):
-      title = request_data['title']
+  request_data = request.get_json()
+  if (request_data == None):
+    abort(400, description="Empty Body Request")
+  # check if there is request data and it contains the right data
+  if ('title' in request_data and 'date' in request_data):
+    title = request_data['title']
+    try:
       date = datetime.datetime.strptime(request_data['date'], "%m/%d/%Y")
+    except ValueError as e:
+      abort(400, description=str(e))
+    try:
       newMovie = Movie(title=title, release_date=date)
       db.session.add(newMovie)
       db.session.commit()
-      print(newMovie)
-    else:
+    except Exception as e:
       db.session.rollback()
-      abort(400)
-    return 'done'
-  except:
-    abort(400)
+      abort(500, description=str(e))
+  else:
+    abort(400, description='request body did not include either or title and date')
+  return 'done'
 
 @APP.route('/actors', methods=['GET'])
 def get_actors():
@@ -150,7 +154,7 @@ Error Handler
 
 @APP.errorhandler(400)
 def bad_request(e):
-  return jsonify(status_code=400, error="Bad Request"), 400
+  return jsonify(status_code=400, error=str(e.description)), 400
 
 @APP.errorhandler(403)
 def page_not_found(e):
@@ -166,7 +170,7 @@ def page_not_found(e):
 
 @APP.errorhandler(500)
 def page_not_found(e):
-  return jsonify(status_code=500, error="Internal Server Error"), 500
+  return jsonify(status_code=500, error=str(e.description)), 500
 
 if __name__ == '__main__':
     APP.run(host='0.0.0.0', port=8080, debug=True)
