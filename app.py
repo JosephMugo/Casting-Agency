@@ -92,6 +92,32 @@ def post_actor():
     db.session.rollback()
     abort(400)
 
+@APP.route('/actors/<int:actor_id>', methods=['PATCH'])
+def patch_actor(actor_id):
+  print(actor_id)
+  # check if actor object exist in database
+  movie = Actor.query.filter_by(id=actor_id).first()
+  if movie == None:
+    abort(404)
+  else:
+    request_data = request.get_json()
+    # update name - if new name provided
+    if ('name' in request_data):
+      try:
+        movie.name = request_data['name']
+        db.session.commit()
+      except:
+        db.session.rollback()
+        abort(400)
+    # update age - if new age provided
+    if ('age' in request_data):
+      try:
+        movie.age = request_data['age']
+        db.session.commit()
+      except:
+        db.session.rollback()
+        abort(400)
+  return jsonify('updates complete')
 
 '''
 Error Handler 
