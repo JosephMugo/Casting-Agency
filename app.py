@@ -86,23 +86,25 @@ def get_actors():
 
 @APP.route('/actors', methods=['POST'])
 def post_actor():
-  try:
-    request_data = request.get_json()
-    # check if there is request data and it contains the right data
-    if ((request_data['name']) and (request_data['age']) and (request_data['gender']) and (request_data['movie_id'])):
-      name = request_data['name']
-      age = request_data['age']
-      gender = request_data['gender']
-      movie_id = request_data['movie_id']
+  request_data = request.get_json()
+  if (request_data == None):
+    abort(400, description='Empty Body Request')
+  # check if there is request data and it contains the right data
+  if ('name' in request_data and 'age' in request_data and 'gender' in request_data and 'movie_id' in request_data):
+    name = request_data['name']
+    age = request_data['age']
+    gender = request_data['gender']
+    movie_id = request_data['movie_id']
+    try:
       newActor = Actor(name=name, age=age, gender=gender, movie_id=movie_id)
       db.session.add(newActor)
       db.session.commit()
-    else:
-      abort(400)
-    return 'done'
-  except:
-    db.session.rollback()
-    abort(400)
+    except Exception as e:
+      db.session.rollback()
+      abort(500, description=str(e))
+  else:
+    abort(400, description='Missing required properties or property')
+  return 'done'
 
 @APP.route('/actors/<int:actor_id>', methods=['PATCH'])
 def patch_actor(actor_id):
