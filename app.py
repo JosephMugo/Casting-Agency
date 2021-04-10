@@ -119,6 +119,23 @@ def patch_actor(actor_id):
         abort(400)
   return jsonify('updates complete')
 
+@APP.route('/actors/<int:actor_id>', methods=['DELETE'])
+def delete_actor(actor_id):
+  print(actor_id)
+  # check if actor object exist in database
+  actor = Actor.query.filter_by(id=actor_id).first()
+  if actor == None:
+    abort(404)
+  else:
+    try:
+      # delete actor object
+      db.session.delete(actor)
+      db.session.commit()
+    except:
+      db.session.rollback()
+      abort(500)
+  return jsonify({ "deleted actor with id": actor_id})
+
 '''
 Error Handler 
 '''
