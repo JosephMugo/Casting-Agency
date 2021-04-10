@@ -82,7 +82,7 @@ def get_actors():
       "age": actor.age,
       "gender": actor.gender
     })
-  return jsonify(formattedActors)
+  return jsonify({"actors": formattedActors})
 
 @APP.route('/actors', methods=['POST'])
 def post_actor():
