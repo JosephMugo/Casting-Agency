@@ -5,6 +5,7 @@ from flask_cors import CORS
 from models import setup_db, Movie, Actor, db
 from sqlalchemy.exc import IntegrityError
 import datetime
+from auth import AuthError, requires_auth
 
 def create_app(test_config=None):
   # create and configure the app
@@ -25,7 +26,8 @@ def after_request(response):
 Endpoints 
 '''
 @APP.route('/movies', methods=['GET'])
-def get_movies():
+@requires_auth('get:movies')
+def get_movies(jwt):
   try:
     movies = Movie.query.all()
     formattedMovies = []
@@ -49,7 +51,8 @@ def get_movies():
   return jsonify({"movies": formattedMovies})
 
 @APP.route('/movies', methods=['POST'])
-def post_movie():
+@requires_auth('add:movies')
+def post_movie(jwt):
   request_data = request.get_json()
   if (request_data == None):
     abort(400, description="Empty Body Request")
@@ -72,7 +75,8 @@ def post_movie():
   return 'done'
 
 @APP.route('/actors', methods=['GET'])
-def get_actors():
+@requires_auth('get:actors')
+def get_actors(jwt):
   actors = Actor.query.all()
   formattedActors = []
   for actor in actors:
@@ -85,7 +89,8 @@ def get_actors():
   return jsonify({"actors": formattedActors})
 
 @APP.route('/actors', methods=['POST'])
-def post_actor():
+@requires_auth('add:actors')
+def post_actor(jwt):
   request_data = request.get_json()
   if (request_data == None):
     abort(400, description='Empty Body Request')
@@ -107,7 +112,8 @@ def post_actor():
   return 'done'
 
 @APP.route('/actors/<int:actor_id>', methods=['PATCH'])
-def patch_actor(actor_id):
+@requires_auth('update:actors')
+def patch_actor(jwt, actor_id):
   # check if actor object exist in database
   actor = Actor.query.filter_by(id=actor_id).first()
   if actor == None:
@@ -133,7 +139,8 @@ def patch_actor(actor_id):
   return jsonify('updates complete')
 
 @APP.route('/actors/<int:actor_id>', methods=['DELETE'])
-def delete_actor(actor_id):
+@requires_auth('delete:actors')
+def delete_actor(jwt, actor_id):
   # check if actor object exist in database
   actor = Actor.query.filter_by(id=actor_id).first()
   if actor == None:
@@ -171,6 +178,12 @@ def page_not_found(e):
 @APP.errorhandler(500)
 def page_not_found(e):
   return jsonify(status_code=500, error=str(e.description)), 500
+
+@APP.errorhandler(AuthError)
+def handle_auth_error(ex):
+    response = jsonify(ex.error)
+    response.status_code = ex.status_code
+    return response
 
 if __name__ == '__main__':
     APP.run(host='0.0.0.0', port=8080, debug=True)
