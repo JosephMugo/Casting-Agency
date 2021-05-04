@@ -5,7 +5,7 @@ import json
 from app import create_app
 from models import setup_db, Movie, Actor
 
-class CastingAgency(unittest.TestCase):
+class CastingAgencyTestCase(unittest.TestCase):
     
     def setUp(self):
         self.app = create_app()
@@ -16,6 +16,7 @@ class CastingAgency(unittest.TestCase):
     def tearDown(self):
         pass
 
+    # 
 
 if __name__ == "__main__":
     unittest.main()
