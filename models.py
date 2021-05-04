@@ -6,8 +6,9 @@ import os
 database_path = os.environ.get('DATABASEURL')
 
 if not database_path:
-    database_path = os.environ.get('TESTDATABASEURL')
-    
+    password = os.environ.get('DATABASEPASS')
+    if not database_path:
+        raise ValueError('Missing database path')
 db = SQLAlchemy()
 
 def setup_db(app, database_path=database_path):
