@@ -37,6 +37,25 @@ logout in order to logout current session and then use the link for login to acc
 ##### 410
 ##### 500
 
+## Roles & Permissions
+#### Casting Assistant
+movie casting assistant
+###### permissions
+- GET /movies
+- GET /actors
+#### Casting Director
+movie casting director
+###### permissions
+- GET /movies
+- GET /actors
+- POST /actors
+- PATCH /actors
+- DELETE /actors
+#### Executive Producer
+movie executive producer
+###### permissions
+###### - ALL ENDPOINTS
+
 ## Endpoints
 endpoints require Authorization - Bearer Token with correct permission
 | Method     | Path| Info     | Parameters | Request |
