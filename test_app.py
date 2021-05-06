@@ -68,16 +68,23 @@ class CastingAgencyTestCase(unittest.TestCase):
         res = self.client().post('/movies', headers={'Authorization': f'Bearer {executive}'}, json=self.new_movie)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
-        # fail
+        # fail - no auth
     def test_fail_create_movie(self):
         res = self.client().post('/movies', json=self.new_movie)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
-
     # GET /actors
         # pass
-        # fail
-
+    def test_get_actors(self):
+        res = self.client().get('/actors', headers={'Authorization': f'Bearer {executive}'})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(len(data['actors']))
+        # fail - no auth
+    def test_get_actors(self):
+        res = self.client().get('/actors')
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 401)
 
     # POST /actors
         # pass
