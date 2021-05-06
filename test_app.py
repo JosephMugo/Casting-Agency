@@ -107,8 +107,15 @@ class CastingAgencyTestCase(unittest.TestCase):
 
     # PATCH /actors/<int:actor_id>
         # pass
+    def test_patch_actors(self):
+        res = self.client().patch('/actors/1', headers={'Authorization': f'Bearer {executive}'}, json={"name": "New Name"})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
         # fail
-
+    def test_fail_patch_actors(self):
+        res = self.client().patch('/actors/1', json={"name": "New Name"})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 401)
 
     # DELETE /actors/<int:actor_id>
         # pass
