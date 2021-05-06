@@ -40,4 +40,12 @@
 | DELETE | /actors/<i>id</i> | delete specified actor object in database | N/A | DELETE /actors | 
 
 ## Testing
+Start with fresh database
 Manually input atleast one movie/actor record in database in order to pass tests
+Movie Record - Manual Entry
+id: 1
+title: Movie Test
+release_date: 4/2/2020
+Actor Record - Manual Entry
+id: 1
+title: 
