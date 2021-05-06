@@ -9,6 +9,7 @@ if not database_path:
     raise ValueError('Missing database path')
 db = SQLAlchemy()
 
+
 def setup_db(app, database_path=database_path):
     app.config["SQLALCHEMY_DATABASE_URI"] = database_path
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -16,11 +17,13 @@ def setup_db(app, database_path=database_path):
     db.init_app(app)
     db.create_all()
 
+
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False, unique=True)
     release_date = db.Column(db.Date, nullable=False)
     actors = db.relationship('Actor', backref='movie', lazy=True)
+
 
 class Actor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
