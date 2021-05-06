@@ -38,3 +38,6 @@
 | POST | /actors | post new actor to database | name, age, gender, movie_id | POST /actors | 
 | PATCH | /actors/<i>id</i> | update specified actor object in database | <i>property of actor being updated</i> | PATCH /movies | 
 | DELETE | /actors/<i>id</i> | delete specified actor object in database | N/A | DELETE /actors | 
+
+## Testing
+Manually input atleast one movie/actor record in database in order to pass tests

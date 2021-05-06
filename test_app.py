@@ -31,7 +31,6 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.database_name = 'castingagency_test'
         # self.database_path = 'postgresql://postgres:' + password + '@localhost:5432/' + self.database_name
         self.database_path = "postgresql://postgres:{}@{}/{}".format(password, 'localhost:5432', self.database_name)
-        'postgresql://postgres:' + password + '@localhost:5432/fyyur'
         setup_db(self.app, self.database_path)
 
         with self.app.app_context():
@@ -44,23 +43,37 @@ class CastingAgencyTestCase(unittest.TestCase):
 
     # GET /movies
         # pass
+    # movie record has to exist in database for test to pass
     def test_get_movies(self):
         res = self.client().get('/movies', headers={'Authorization': f'Bearer {executive}'})
         data = json.loads(res.data)
-        print(data)
-        # fail
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(len(data['movies']))
+        # fail - no auth
+    def test_fail_get_movies(self):
+        res = self.client().get('/movies')
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 401)
     # POST /movies
         # pass
         # fail
+
+
     # GET /actors
         # pass
         # fail
+
+
     # POST /actors
         # pass
         # fail
+
+
     # PATCH /actors/<int:actor_id>
         # pass
         # fail
+
+
     # DELETE /actors/<int:actor_id>
         # pass
         # fail
