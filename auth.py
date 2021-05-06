@@ -10,27 +10,29 @@ AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
 ALGORITHMS = [os.environ.get('ALGORITHMS')]
 API_AUDIENCE = os.environ.get('API_AUDIENCE')
 
-## AuthError Exception
+# AuthError Exception
 '''
 AuthError Exception
 A standardized way to communicate auth failure modes
 '''
+
+
 class AuthError(Exception):
     def __init__(self, error, status_code):
         self.error = error
         self.status_code = status_code
 
 
-## Auth Header
+# Auth Header
 def get_token_auth_header():
     # retrieve auth header from request recieved
     auth_header = request.headers.get('Authorization', None)
-    # check if request contains authorization header 
+    # check if request contains authorization header
     if not auth_header:
         raise AuthError({
-        'code': 'Auth Header missing',
-        'description': 'Authorization header must be provided'
-    }, 401)
+            'code': 'Auth Header missing',
+            'description': 'Authorization header must be provided'
+        }, 401)
     # split auth_header into auth type and token
     sections = auth_header.split()
     if sections[0].lower() != 'bearer':
@@ -52,6 +54,7 @@ def get_token_auth_header():
     token = sections[1]
     return token
 
+
 def check_permissions(permission, payload):
     if 'permissions' not in payload:
         raise AuthError({
@@ -65,10 +68,11 @@ def check_permissions(permission, payload):
         }, 401)
     return True
 
+
 def verify_decode_jwt(token):
     jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
     jwks = json.loads(jsonurl.read())
-    try: 
+    try:
         unverified_header = jwt.get_unverified_header(token)
     except Exception as e:
         raise AuthError({
@@ -121,9 +125,10 @@ def verify_decode_jwt(token):
                 'description': 'Unable to parse authentication token.'
             }, 400)
     raise AuthError({
-                'code': 'invalid_header',
+        'code': 'invalid_header',
                 'description': 'Unable to find the appropriate key.'
-            }, 400)
+    }, 400)
+
 
 def requires_auth(permission=''):
     def requires_auth_decorator(f):
