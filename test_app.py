@@ -2,6 +2,7 @@ import os
 import unittest
 import json
 from flask_sqlalchemy import SQLAlchemy
+import datetime
 
 from app import create_app
 from models import setup_db, Movie, Actor
@@ -37,8 +38,15 @@ class CastingAgencyTestCase(unittest.TestCase):
             self.db = SQLAlchemy()
             self.db.init_app(self.app)
             self.db.create_all()
+        
+        self.new_movie = {
+            "title": "Movie Test 1",
+            "date": "4/4/2021"
+        }
     
     def tearDown(self):
+        with self.app.app_context():
+            self.db.drop_all()
         pass
 
     # GET /movies
@@ -56,8 +64,15 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 401)
     # POST /movies
         # pass
+    def test_create_movie(self):
+        res = self.client().post('/movies', headers={'Authorization': f'Bearer {executive}'}, json=self.new_movie)
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
         # fail
-
+    def test_fail_create_movie(self):
+        res = self.client().post('/movies', json=self.new_movie)
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 401)
 
     # GET /actors
         # pass
