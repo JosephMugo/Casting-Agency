@@ -40,8 +40,15 @@ class CastingAgencyTestCase(unittest.TestCase):
             self.db.create_all()
         
         self.new_movie = {
-            "title": "Movie Test 1",
+            "title": "Movie Test",
             "date": "4/4/2021"
+        }
+
+        self.new_actor = {
+            "actor": "Test Actor",
+            "age": 21,
+            "gender": "male",
+            "movie_id": 1
         }
     
     def tearDown(self):
@@ -88,8 +95,15 @@ class CastingAgencyTestCase(unittest.TestCase):
 
     # POST /actors
         # pass
-        # fail
-
+    def test_create_actors(self):
+        res = self.client().post('/actors', headers={'Authorization': f'Bearer {executive}'}, json=self.new_actor)
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        # fail - no auth
+    def test_fail_create_actors(self):
+        res = self.client().post('/actors', json=self.new_actor)
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 401)
 
     # PATCH /actors/<int:actor_id>
         # pass
