@@ -119,8 +119,15 @@ class CastingAgencyTestCase(unittest.TestCase):
 
     # DELETE /actors/<int:actor_id>
         # pass
+    def test_delete_actors(self):
+        res = self.client().delete('/actors/1', headers={'Authorization': f'Bearer {executive}'})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
         # fail
-    
+    def test_fail_actors(self):
+        res = self.client().delete('/actors/1')
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 401)
 
 if __name__ == "__main__":
     unittest.main()
