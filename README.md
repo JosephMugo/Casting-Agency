@@ -8,10 +8,6 @@
 > Authentication: implemented
 Login: https://dev-8bzdf01x.us.auth0.com/authorize?audience=casting&response_type=token&client_id=kcqDRJaQO1VsrHAR9zzWiYb4upMADUdI&redirect_uri=http://localhost:5000/login
 login with credentials and copy access token in url
-(credentials will be changed after review - here they are)
-
-![image](https://user-images.githubusercontent.com/26510336/117241317-816f9400-adf8-11eb-85d4-fc2ce47810bb.png)
-
 
 Logout Page: https://dev-8bzdf01x.us.auth0.com/v2/logout?client_id=kcqDRJaQO1VsrHAR9zzWiYb4upMADUdI&returnTo=http://localhost:5000/logout
 logout in order to logout current session and then use the link for login to access another account
